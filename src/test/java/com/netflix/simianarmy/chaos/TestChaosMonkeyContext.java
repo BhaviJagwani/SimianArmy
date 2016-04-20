@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.amazonaws.services.autoscaling.model.TagDescription;
+import com.amazonaws.services.rds.model.DBInstance;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ExecChannel;
 import org.jclouds.compute.domain.ExecResponse;
@@ -299,6 +300,16 @@ public class TestChaosMonkeyContext extends TestMonkeyContext implements ChaosMo
             @Override
             public boolean canChangeInstanceSecurityGroups(String instanceId) {
                 return true;
+            }
+
+            @Override
+            public void rebootDBInstance(String instanceId) {
+
+            }
+
+            @Override
+            public List<DBInstance> getDBInstances() {
+                return null;
             }
 
             @Override

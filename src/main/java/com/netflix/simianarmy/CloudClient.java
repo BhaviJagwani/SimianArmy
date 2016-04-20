@@ -20,6 +20,7 @@ package com.netflix.simianarmy;
 import java.util.List;
 import java.util.Map;
 
+import com.amazonaws.services.rds.model.DBInstance;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.ssh.SshClient;
@@ -180,6 +181,10 @@ public interface CloudClient {
      * @return true iff we can change security groups.
      */
     boolean canChangeInstanceSecurityGroups(String instanceId);
+
+    void rebootDBInstance(String instanceId);
+
+    List<DBInstance> getDBInstances();
 
     /**
      * Sets the security groups for an instance.

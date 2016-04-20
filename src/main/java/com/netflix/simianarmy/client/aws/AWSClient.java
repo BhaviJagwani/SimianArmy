@@ -20,6 +20,10 @@ package com.netflix.simianarmy.client.aws;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.services.autoscaling.AmazonAutoScalingClient;
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.autoscaling.model.AutoScalingInstanceDetails;
@@ -69,6 +73,9 @@ import com.amazonaws.services.elasticloadbalancing.model.DescribeLoadBalancersRe
 import com.amazonaws.services.elasticloadbalancing.model.DescribeLoadBalancersResult;
 import com.amazonaws.services.elasticloadbalancing.model.LoadBalancerAttributes;
 import com.amazonaws.services.elasticloadbalancing.model.LoadBalancerDescription;
+import com.amazonaws.services.rds.AmazonRDSClient;
+import com.amazonaws.services.rds.model.DBInstance;
+import com.amazonaws.services.rds.model.RebootDBInstanceRequest;
 import com.amazonaws.services.simpledb.AmazonSimpleDB;
 import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
 import com.google.common.base.Objects;
@@ -253,6 +260,25 @@ public class AWSClient implements CloudClient {
             }
         }
         client.setEndpoint("ec2." + region + ".amazonaws.com");
+        return client;
+    }
+
+    protected AmazonRDSClient rdsClient(){
+        AmazonRDSClient client;
+        if (awsClientConfig == null) {
+            if (awsCredentialsProvider == null) {
+                client = new AmazonRDSClient();
+            } else {
+                client = new AmazonRDSClient(awsCredentialsProvider);
+            }
+        } else {
+            if (awsCredentialsProvider == null) {
+                client = new AmazonRDSClient(awsClientConfig);
+            } else {
+                client = new AmazonRDSClient(awsCredentialsProvider, awsClientConfig);
+            }
+        }
+        client.setRegion(RegionUtils.getRegion(region));
         return client;
     }
 
@@ -573,6 +599,48 @@ public class AWSClient implements CloudClient {
             if (e.getErrorCode().equals("InvalidInstanceID.NotFound")) {
                 throw new NotFoundException("AWS instance " + instanceId + " not found", e);
             }
+            throw e;
+        }
+    }
+
+    /** Reboots the DB instance
+     * @param instanceId the instance-identifier
+     * */
+    @Override
+    public void rebootDBInstance(String instanceId){
+        Validate.notEmpty(instanceId);
+        LOGGER.info(String.format("Rebooting DB Instance %s", instanceId));
+        try{
+            String instanceIdentifier = instanceId.split(":")[0];
+            Boolean multiAZ= false;
+            if(instanceId.split(":").length > 1)
+                multiAZ = instanceId.split(":")[1].equals("MULTIAZ");
+
+            LOGGER.info("Is enabled : "+ multiAZ);
+            RebootDBInstanceRequest instanceRequest= new RebootDBInstanceRequest(instanceIdentifier);
+            if(multiAZ)
+                instanceRequest.setForceFailover(Boolean.TRUE);
+            rdsClient().rebootDBInstance(instanceRequest);
+
+        } catch(AmazonServiceException e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+
+    /**
+     * Gets a list of RDS instances in the specified region
+     * @return list of instances required
+     * */
+    @Override
+    public List<DBInstance> getDBInstances(){
+        LOGGER.info(String.format("Fetching DB Instances in %s region", region));
+        try{
+
+            return rdsClient().describeDBInstances().getDBInstances();
+
+        } catch(AmazonServiceException e) {
             throw e;
         }
     }

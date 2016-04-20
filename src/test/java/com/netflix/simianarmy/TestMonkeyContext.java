@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import com.amazonaws.services.rds.model.DBInstance;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.ssh.SshClient;
@@ -192,6 +193,16 @@ public class TestMonkeyContext implements Monkey.Context {
             @Override
             public boolean canChangeInstanceSecurityGroups(String instanceId) {
                 throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void rebootDBInstance(String instanceId) {
+
+            }
+
+            @Override
+            public List<DBInstance> getDBInstances() {
+                return null;
             }
 
             @Override
