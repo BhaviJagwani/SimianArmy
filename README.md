@@ -61,25 +61,28 @@ This Monkey extends the basic chaos monkey and randomly picks an RDS Instance fr
   ```shell
   list_url="http://<myELB>/list"
   add_url="http://<myELB>/add"
-  total=$(curl -s $list_url)
+  total=$(curl --connect-timeout 20 -s $list_url)
+
   echo "DB Instance is up!"
   while true 
   do
 	data="{\"name\":\"soldier$total\"}"
-	add=$(curl -s $add_url -H "Content-Type: application/json" -X POST -d $data)
+	add=$(curl --connect-timeout 20 -s $add_url -H "Content-Type: application/json" -X POST -d $data)
 	total=$[$total+1]
 	if [ "$add" != "Added" ]
 	then 
-		echo "Error1" 
-	elif [ $(curl -s $list_url) != "$total" ]
+		echo "Error"
+		total=$[$total-1]  
+	elif [ $(curl --connect-timeout 20 -s $list_url) != "$total" ]
 	then
 			echo "Error"
+			total=$[$total-1] 
 	else 
 		echo "Success"
 		date 	
 	fi
-	echo "Sleeping for 30 seconds"
-	sleep 30
+	echo "Sleeping for 15 seconds"
+	sleep 15
 	echo "Running next test"
   done
   ```
