@@ -54,11 +54,13 @@ This Monkey extends the basic chaos monkey and randomly picks an RDS Instance fr
 
 - Create a sample java application like [this](link to repo here) which connects to an RDS Endpoint and has APIs to add and list entries. 
 - Deploy it to an ec2-instance and configure it to run on start up. (You can do this by creating a script and adding it to /etc/rc.local)
-  ```shell
+ 
+  ```
   nohup java -jar /home/ec2-user/hello-world-0.1.0.jar > /home/ec2-user/log.txt &
   ```
 - Create and run a script to test failover of the web servers and RDS instances
-  ```shell
+  
+  ```
   list_url="http://<myELB>/list"
   add_url="http://<myELB>/add"
   total=$(curl --connect-timeout 20 -s $list_url)
