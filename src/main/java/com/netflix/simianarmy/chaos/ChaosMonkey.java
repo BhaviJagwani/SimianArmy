@@ -87,7 +87,8 @@ public abstract class ChaosMonkey extends Monkey {
     public enum Type implements MonkeyType {
 
         /** chaos monkey. */
-        CHAOS
+        CHAOS,
+        DBCHAOS
     }
 
     /**
@@ -96,7 +97,7 @@ public abstract class ChaosMonkey extends Monkey {
     public enum EventTypes implements EventType {
 
         /** The chaos termination. */
-        CHAOS_TERMINATION, CHAOS_TERMINATION_SKIPPED
+        CHAOS_TERMINATION, CHAOS_TERMINATION_SKIPPED, CHAOS_REBOOT_DB, CHAOS_REBOOT_DB_SKIPPED
     }
 
     /** {@inheritDoc} */

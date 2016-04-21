@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServlet;
 
 import com.netflix.simianarmy.basic.conformity.BasicConformityMonkey;
 import com.netflix.simianarmy.basic.conformity.BasicConformityMonkeyContext;
+import com.netflix.simianarmy.dbchaos.DBChaosMonkey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,8 @@ public class BasicMonkeyServer extends HttpServlet {
     public void addMonkeysToRun() {
         LOGGER.info("Adding Chaos Monkey.");
         RUNNER.replaceMonkey(this.chaosClass, this.chaosContextClass);
+        LOGGER.info("Adding DB Chaos Monkey.");
+        RUNNER.replaceMonkey(DBChaosMonkey.class, DBChaosMonkeyContext.class);
         LOGGER.info("Adding Volume Tagging Monkey.");
         RUNNER.replaceMonkey(VolumeTaggingMonkey.class, BasicVolumeTaggingMonkeyContext.class);
         LOGGER.info("Adding Janitor Monkey.");
