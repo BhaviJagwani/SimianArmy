@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Soldier Added</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+Soldier <b th:text="${soldier.name}" ></b> added to the army!
+
+<h3>Current list of Soldiers!</h3>
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+    </tr>
+    <tr th:each="soldier : ${soldiers}">
+        <td th:text="${soldier.id}">Id </td>
+        <td th:text="${soldier.name}">Name </td>
+    </tr>
+</table>
+
+</body>
+</html>
