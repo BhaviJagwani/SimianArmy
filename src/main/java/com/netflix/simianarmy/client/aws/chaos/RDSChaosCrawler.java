@@ -12,13 +12,13 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * The Class DBChaosCrawler. This will crawl for all available RDS Instances associated with the in the specified region.
+ * The Class RDSChaosCrawler. This will crawl for all available RDS Instances associated with the in the specified region.
  * Created by bjagwani on 4/20/16.
  */
-public class DBChaosCrawler implements ChaosCrawler {
+public class RDSChaosCrawler implements ChaosCrawler {
 
     /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(DBChaosCrawler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RDSChaosCrawler.class);
 
     /**
      * The group types Types.
@@ -37,7 +37,7 @@ public class DBChaosCrawler implements ChaosCrawler {
      * @param awsClient
      *            the aws client
      */
-    public DBChaosCrawler(AWSClient awsClient){
+    public RDSChaosCrawler(AWSClient awsClient){
         this.awsClient= awsClient;
     }
 

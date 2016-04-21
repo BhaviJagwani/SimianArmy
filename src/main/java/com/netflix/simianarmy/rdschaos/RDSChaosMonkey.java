@@ -1,10 +1,10 @@
-package com.netflix.simianarmy.dbchaos;
+package com.netflix.simianarmy.rdschaos;
 
 import com.google.common.collect.Lists;
 import com.netflix.simianarmy.*;
 import com.netflix.simianarmy.basic.chaos.BasicChaosMonkey;
 import com.netflix.simianarmy.chaos.*;
-import com.netflix.simianarmy.client.aws.chaos.DBChaosCrawler;
+import com.netflix.simianarmy.client.aws.chaos.RDSChaosCrawler;
 import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +14,10 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * The Class DBChaosMonkey. It creates a DB Chaos and then does the task of BasicChaosMonkey
+ * The Class RDSChaosMonkey. It creates a RDS Chaos and then does the task of BasicChaosMonkey
  * Created by bjagwani on 4/19/16.
  */
-public class DBChaosMonkey extends ChaosMonkey{
+public class RDSChaosMonkey extends ChaosMonkey{
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(BasicChaosMonkey.class);
@@ -26,7 +26,7 @@ public class DBChaosMonkey extends ChaosMonkey{
     private final MonkeyConfiguration cfg;
 
     /** The Constant NS. */
-    private static final String NS = "simianarmy.dbchaos.";
+    private static final String NS = "simianarmy.rdschaos.";
 
     /** The runs per day. */
     private final long runsPerDay;
@@ -43,11 +43,11 @@ public class DBChaosMonkey extends ChaosMonkey{
     private static final double DEFAULT_MANDATORY_TERMINATION_PROBABILITY = 0.5;
 
     /**
-     * Instantiates a new Extreme chaos monkey.
+     * Instantiates a new RDS chaos monkey.
      *
      * @param ctx the ctx
      */
-    public DBChaosMonkey(ChaosMonkey.Context ctx) {
+    public RDSChaosMonkey(ChaosMonkey.Context ctx) {
         super(ctx);
         this.cfg = ctx.configuration();
 
@@ -75,13 +75,13 @@ public class DBChaosMonkey extends ChaosMonkey{
     public void doMonkeyBusiness(){
         context().resetEventReport();
         cfg.reload();
-        LOGGER.info("Running extreme chaos monkey");
+        LOGGER.info("Running RDS chaos monkey");
         if (!isChaosMonkeyEnabled()) {
             LOGGER.info("Chaos monkey disabled");
             return;
         }
 
-        DBChaosCrawler extremeChaosCrawler = (DBChaosCrawler) context().chaosCrawler();
+        RDSChaosCrawler extremeChaosCrawler = (RDSChaosCrawler) context().chaosCrawler();
         ChaosCrawler.InstanceGroup instanceGroup = extremeChaosCrawler.group();
         if (!this.isMaxTerminationCountExceeded(instanceGroup)) {
             double prob = getEffectiveProbabilityFromCfg(instanceGroup);
@@ -293,6 +293,5 @@ public class DBChaosMonkey extends ChaosMonkey{
 
         return false;
     }
-
 
 }
