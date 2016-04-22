@@ -1,6 +1,6 @@
 #!/bin/bash
-list_url="http://simian-army-test-lb-1641297649.us-west-2.elb.amazonaws.com/list"
-add_url="http://simian-army-test-lb-1641297649.us-west-2.elb.amazonaws.com/add"
+list_url="http://<ELB>/list"
+add_url="http://<ELB>/add"
 total=$(curl --connect-timeout 20 -s $list_url)
 echo "DB Instance is up!"
 
